@@ -8,9 +8,10 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 
-import sun.net.dns.ResolverConfiguration;
+import org.xbill.DNS.ResolverConfig;
 
 @RestController
 public class NetworkTestController {
@@ -23,11 +24,11 @@ public class NetworkTestController {
 	public String dns(@RequestParam String hostname) {
         String result = "Resolve name for "+ hostname + ". </br>";
         try {
-            List<String> nameServers = ResolverConfiguration.open().nameservers();
-            for (String nameServer : nameServers)
+            List<InetSocketAddress> dnsServers = ResolverConfig.getCurrentConfig().servers();
+            for (InetSocketAddress nameServer : dnsServers)
             {
                 result += "Using system selected DNS server:"+ "</br>";
-                result += nameServer + "</br>";
+                result += nameServer.getAddress() + "</br>";
             }
             
             InetAddress addr = InetAddress.getByName(hostname);
